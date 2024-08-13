@@ -3,20 +3,17 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgForOf } from '@angular/common';
-import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [FormsModule, NgForOf, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-project.component.html',
-  styleUrl: './add-project.component.css',
 })
 export class AddProjectComponent {
   addProjectForm: FormGroup;
@@ -30,33 +27,39 @@ export class AddProjectComponent {
       name: ['', [Validators.required]],
       intro: ['', [Validators.required]],
       status: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      startDate: ['', [Validators.required]],
-      endDate: ['', [Validators.required]],
-      projectMemberUserNames: this.fb.array(
+      startDateTime: ['', [Validators.required]],
+      endDateTime: ['', [Validators.required]],
+      projectMemberUsernames: this.fb.array(
         [this.fb.control('')],
         Validators.required,
       ),
     });
   }
 
-  get projectMemberUserNames() {
-    return this.addProjectForm.get('projectMemberUserNames') as FormArray;
+  get projectMemberUsernames() {
+    return this.addProjectForm.get('projectMemberUsernames') as FormArray;
   }
 
   addMember() {
-    this.projectMemberUserNames.push(this.fb.control(''));
+    this.projectMemberUsernames.push(this.fb.control(''));
   }
 
   removeMember(index: number) {
-    this.projectMemberUserNames.removeAt(index);
+    this.projectMemberUsernames.removeAt(index);
   }
 
   onSubmit() {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
-      this.authService.addProject(formData).subscribe(
-        (response) => {
-          console.log('Project created successfully:', response);
+      const data = {
+        ...formData,
+        startDateTime: new Date(formData.startDateTime).toISOString(),
+        endDateTime: new Date(formData.endDateTime).toISOString(),
+      };
+
+      this.authService.addProject(data).subscribe(
+        () => {
+          console.log('Project created successfully');
           this.router.navigate(['/dashboard']);
         },
         (error) => {
