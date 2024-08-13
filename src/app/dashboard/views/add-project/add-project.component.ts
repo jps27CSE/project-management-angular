@@ -7,13 +7,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { format, parseISO } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgForOf],
   templateUrl: './add-project.component.html',
+  styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent {
   addProjectForm: FormGroup;
@@ -52,9 +55,18 @@ export class AddProjectComponent {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
       const data = {
-        ...formData,
-        startDateTime: new Date(formData.startDateTime).toISOString(),
-        endDateTime: new Date(formData.endDateTime).toISOString(),
+        name: formData.name,
+        intro: formData.intro,
+        status: formData.status,
+        startDateTime: format(
+          new Date(formData.startDateTime),
+          "yyyy-MM-dd'T'HH:mm:ss",
+        ),
+        endDateTime: format(
+          new Date(formData.endDateTime),
+          "yyyy-MM-dd'T'HH:mm:ss",
+        ),
+        projectMemberUsernames: formData.projectMemberUsernames,
       };
 
       this.authService.addProject(data).subscribe(

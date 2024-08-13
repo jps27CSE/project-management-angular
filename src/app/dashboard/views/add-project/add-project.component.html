@@ -1,87 +1,58 @@
-<!-- add-project.component.html -->
-<div class="container mx-auto px-4 py-6">
-  <form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Project Name</span>
-      </label>
-      <input
-        type="text"
-        formControlName="name"
-        placeholder="Enter project name"
-        class="input input-bordered"
-        required
-      />
-    </div>
-
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Project Introduction</span>
-      </label>
-      <textarea
-        formControlName="intro"
-        placeholder="Enter project introduction"
-        class="textarea textarea-bordered"
-        required
-      ></textarea>
-    </div>
-
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Project Status</span>
-      </label>
-      <input
-        type="number"
-        formControlName="status"
-        placeholder="Enter project status"
-        class="input input-bordered"
-        required
-      />
-    </div>
-
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Start Date & Time</span>
-      </label>
-      <input
-        type="datetime-local"
-        formControlName="startDate"
-        class="input input-bordered"
-        required
-      />
-    </div>
-
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">End Date & Time</span>
-      </label>
-      <input
-        type="datetime-local"
-        formControlName="endDate"
-        class="input input-bordered"
-        required
-      />
-    </div>
-
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Project Member Usernames</span>
-      </label>
-      <div formArrayName="projectMemberUserNames" class="space-y-2">
-        <div *ngFor="let member of projectMemberUserNames.controls; let i = index" [formGroupName]="i" class="flex space-x-2">
-          <input
-            type="text"
-            [formControlName]="i"
-            placeholder="Enter member username"
-            class="input input-bordered w-full"
-            required
-          />
-          <button type="button" (click)="removeMember(i)" class="btn btn-error">Remove</button>
-        </div>
-        <button type="button" (click)="addMember()" class="btn btn-secondary mt-2">Add Member</button>
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-lg p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">Add New Project</h2>
+    <form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()">
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Name</span>
+        </label>
+        <input formControlName="name" type="text" placeholder="Project Name" class="input input-bordered w-full" required />
       </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary w-full">Create Project</button>
-  </form>
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Intro</span>
+        </label>
+        <input formControlName="intro" type="text" placeholder="Project Introduction" class="input input-bordered w-full" required />
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Status</span>
+        </label>
+        <input formControlName="status" type="number" placeholder="Status (number)" class="input input-bordered w-full" required />
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Start Date & Time</span>
+        </label>
+        <input formControlName="startDateTime" type="datetime-local" class="input input-bordered w-full" required />
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">End Date & Time</span>
+        </label>
+        <input formControlName="endDateTime" type="datetime-local" class="input input-bordered w-full" required />
+      </div>
+
+      <div formArrayName="projectMemberUsernames">
+        <div *ngFor="let member of projectMemberUsernames.controls; let i = index" class="mb-4">
+          <div class="form-control flex items-center">
+            <label class="label w-full">
+              <span class="label-text">Project Member Username {{ i + 1 }}</span>
+            </label>
+           <div class="flex "> <input [formControlName]="i" type="text" placeholder="Enter username" class="input input-bordered flex-1 mr-2" />
+            <button type="button" (click)="removeMember(i)" class="btn btn-secondary">Remove</button></div>
+          </div>
+        </div>
+        <button type="button" (click)="addMember()" class="btn btn-primary w-full">Add Member</button>
+      </div>
+
+      <div class="form-control mt-6">
+        <button type="submit" class="btn btn-primary w-full">Create Project</button>
+      </div>
+    </form>
+  </div>
 </div>
