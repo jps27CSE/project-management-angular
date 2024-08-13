@@ -9,7 +9,7 @@
       <strong>Start Date:</strong> {{ project.startDateTime | dateFormat }}
     </div>
     <div class="mb-1">
-      <strong>End Date:</strong> {{ project.endDateTime | dateFormat}}
+      <strong>End Date:</strong> {{ project.endDateTime | dateFormat }}
     </div>
     <div class="mb-1">
       <strong>Owner:</strong> {{ project.owner }}
@@ -22,4 +22,5 @@
       </span>
     </div>
   </div>
+  <button (click)="deleteProject()" class="btn btn-error w-full mt-4">Delete Project</button>
 </div>
