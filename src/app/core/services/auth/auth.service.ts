@@ -16,8 +16,9 @@ interface LoginResponse {
 })
 export class AuthService {
   private loginApi = 'http://localhost:8080/auth/login';
-
   private registerApi = 'http://localhost:8080/auth/register';
+  private addProjectApi = 'http://localhost:8080/api/v1/projects/create';
+
   constructor(private http: HttpClient) {}
 
   loginUser(data: any): Observable<any> {
@@ -26,5 +27,10 @@ export class AuthService {
 
   registerUser(data: any): Observable<any> {
     return this.http.post(this.registerApi, data, { responseType: 'text' });
+  }
+
+  addProject(data: any): Observable<any> {
+    // Add this method to create a project
+    return this.http.post(this.addProjectApi, data, { responseType: 'text' });
   }
 }

@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgForOf } from '@angular/common';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-project',
@@ -19,7 +21,11 @@ import { NgForOf } from '@angular/common';
 export class AddProjectComponent {
   addProjectForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {
     this.addProjectForm = this.fb.group({
       name: ['', [Validators.required]],
       intro: ['', [Validators.required]],
@@ -47,8 +53,16 @@ export class AddProjectComponent {
 
   onSubmit() {
     if (this.addProjectForm.valid) {
-      console.log(this.addProjectForm.value);
-      // Add your form submission logic here
+      const formData = this.addProjectForm.value;
+      this.authService.addProject(formData).subscribe(
+        (response) => {
+          console.log('Project created successfully:', response);
+          this.router.navigate(['/dashboard']);
+        },
+        (error) => {
+          console.error('Error creating project:', error);
+        },
+      );
     }
   }
 }
