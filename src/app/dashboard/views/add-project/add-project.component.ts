@@ -9,25 +9,24 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [ReactiveFormsModule, NgForOf],
+  imports: [ReactiveFormsModule, NgForOf, NgIf],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
-  isEdit = false; // Initialize isEdit
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute, // Inject ActivatedRoute to get route parameters
+    private route: ActivatedRoute,
   ) {
     this.addProjectForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -72,7 +71,7 @@ export class AddProjectComponent implements OnInit {
         projectMemberUsernames: formData.projectMemberUsernames,
       };
 
-      if (this.isEdit && this.projectId !== undefined) {
+      if (this.projectId !== undefined) {
         // Handle update logic if needed
       } else {
         this.authService.addProject(data).subscribe(
@@ -110,7 +109,6 @@ export class AddProjectComponent implements OnInit {
       const id = params.get('id');
       if (id) {
         this.projectId = +id;
-        this.isEdit = true;
         // Optionally load the project details and populate the form
       }
     });
