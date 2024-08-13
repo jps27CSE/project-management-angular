@@ -1,0 +1,43 @@
+<div class="hero bg-base-200 min-h-screen">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Register now!</h1>
+      <p class="py-6">
+        Join us and start managing your projects effortlessly. Create your account below to get started.
+      </p>
+    </div>
+    <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+      <!-- Bind the form submission to the onSubmit method -->
+
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="card-body">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Name</span>
+          </label>
+          <!-- Bind the input to the FormControl with formControlName -->
+          <input type="text" formControlName="name" placeholder="Name" class="input input-bordered" required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Username</span>
+          </label>
+          <input type="text" formControlName="username" placeholder="Username" class="input input-bordered" required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input type="password" formControlName="password" placeholder="Password" class="input input-bordered" required />
+        </div>
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+        <div class="text-center mt-4">
+          <p>
+            Already have an account? <a routerLink="../login" class="link link-primary">Login here</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="hero bg-base-200 min-h-screen">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Login now!</h1>
+      <p class="py-6">
+        Welcome to Project Management Solution.
+        Collaborate seamlessly, track progress, and achieve your goals with ease.
+        Log in to access your dashboard and take control of your projects today.
+      </p>
+    </div>
+    <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+      <form [formGroup]="loginForm" class="card-body" (ngSubmit)="onSubmit()">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Username</span>
+          </label>
+          <input formControlName="username" type="text" placeholder="username" class="input input-bordered" required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input formControlName="password" type="password" placeholder="password" class="input input-bordered" required />
+        </div>
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+        <div class="text-center mt-4">
+          <p>
+            Don't have an account? <a routerLink="../register" class="link link-primary">Register here</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
