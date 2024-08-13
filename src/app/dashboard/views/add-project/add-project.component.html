@@ -56,10 +56,6 @@
         <button type="submit" class="btn btn-primary w-full">{{ projectId ? 'Update Project' : 'Create Project' }}</button>
       </div>
     </form>
-
-    <!-- Always display the delete button if projectId is defined -->
-    <div class="mt-4" *ngIf="projectId">
-      <button (click)="deleteProject()" class="btn btn-error w-full mt-2">Delete Project</button>
-    </div>
+    
   </div>
 </div>
