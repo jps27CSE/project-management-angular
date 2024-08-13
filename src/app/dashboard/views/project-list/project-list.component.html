@@ -20,7 +20,7 @@
       <span *ngIf="project.projectMemberUsernames.length > 0">
         {{ project.projectMemberUsernames.join(', ') }}
       </span>
+      <button (click)="deleteProject()" class="btn btn-error w-full mt-4">Delete Project</button>
     </div>
-    <button (click)="deleteProject()" class="btn btn-error w-full mt-4">Delete Project</button>
   </div>
 </div>
