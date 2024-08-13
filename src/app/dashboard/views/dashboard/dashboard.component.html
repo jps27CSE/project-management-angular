@@ -25,7 +25,33 @@
   </div>
 
   <div *ngIf="projects.length > 0; else noProjects">
-    <app-project-list *ngFor="let project of projects" [project]="project"></app-project-list>
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+      <thead>
+      <tr>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">Project Name</th>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">Status</th>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">Start Date</th>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">End Date</th>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">Owner</th>
+        <th class="py-2 px-4 border-b border-gray-300 text-left">Members</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let project of projects">
+        <td class="py-2 px-4 border-b border-gray-300">{{ project.name }}</td>
+        <td class="py-2 px-4 border-b border-gray-300">{{ project.status }}</td>
+        <td class="py-2 px-4 border-b border-gray-300">{{ project.startDateTime }}</td>
+        <td class="py-2 px-4 border-b border-gray-300">{{ project.endDateTime }}</td>
+        <td class="py-2 px-4 border-b border-gray-300">{{ project.owner }}</td>
+        <td class="py-2 px-4 border-b border-gray-300">
+          <span *ngIf="project.projectMemberUsernames.length === 0">No members</span>
+          <span *ngIf="project.projectMemberUsernames.length > 0">
+              {{ project.projectMemberUsernames.join(', ') }}
+            </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
   <ng-template #noProjects>
