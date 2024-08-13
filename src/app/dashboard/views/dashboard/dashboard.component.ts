@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [ProjectListComponent, NgForOf, NgIf],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
@@ -60,6 +60,7 @@ export class DashboardComponent implements OnInit {
     this.fetchProjects(this.startDate, this.endDate);
   }
 
+  // Format date to YYYY-MM-DDTHH:MM:SS
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
