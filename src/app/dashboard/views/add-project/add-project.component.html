@@ -1,6 +1,6 @@
 <div class="flex items-center justify-center min-h-screen bg-gray-100">
   <div class="w-full max-w-lg p-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-2xl font-semibold mb-4">Add New Project</h2>
+    <h2 class="text-2xl font-semibold mb-4">{{ isEdit ? 'Update Project' : 'Add New Project' }}</h2>
     <form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()">
       <div class="form-control mb-4">
         <label class="label">
@@ -43,16 +43,21 @@
             <label class="label w-full">
               <span class="label-text">Project Member Username {{ i + 1 }}</span>
             </label>
-           <div class="flex "> <input [formControlName]="i" type="text" placeholder="Enter username" class="input input-bordered flex-1 mr-2" />
-            <button type="button" (click)="removeMember(i)" class="btn btn-secondary">Remove</button></div>
+            <div class="flex "> <input [formControlName]="i" type="text" placeholder="Enter username" class="input input-bordered flex-1 mr-2" />
+              <button type="button" (click)="removeMember(i)" class="btn btn-secondary">Remove</button></div>
           </div>
         </div>
         <button type="button" (click)="addMember()" class="btn btn-primary w-full">Add Member</button>
       </div>
 
       <div class="form-control mt-6">
-        <button type="submit" class="btn btn-primary w-full">Create Project</button>
+        <button type="submit" class="btn btn-primary w-full">{{ isEdit ? 'Update Project' : 'Create Project' }}</button>
       </div>
     </form>
+
+    <!-- Conditionally display update and delete buttons -->
+    <div *ngIf="isEdit" class="mt-4">
+      <button (click)="deleteProject()" class="btn btn-error w-full mt-2">Delete Project</button>
+    </div>
   </div>
 </div>

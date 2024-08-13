@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,8 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { format, parseISO } from 'date-fns';
+import { Router, ActivatedRoute } from '@angular/router';
+import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { NgForOf } from '@angular/common';
 
@@ -18,13 +18,16 @@ import { NgForOf } from '@angular/common';
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
-export class AddProjectComponent {
+export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
+  @Input() projectId?: number;
+  isEdit = false; // Initialize isEdit
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute, // Inject ActivatedRoute to get route parameters
   ) {
     this.addProjectForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -69,15 +72,47 @@ export class AddProjectComponent {
         projectMemberUsernames: formData.projectMemberUsernames,
       };
 
-      this.authService.addProject(data).subscribe(
+      if (this.isEdit && this.projectId !== undefined) {
+        // Handle update logic if needed
+      } else {
+        this.authService.addProject(data).subscribe(
+          () => {
+            console.log('Project created successfully');
+            this.router.navigate(['']);
+          },
+          (error) => {
+            console.error('Error creating project:', error);
+          },
+        );
+      }
+    }
+  }
+
+  deleteProject() {
+    if (this.projectId !== undefined) {
+      this.authService.deleteProject(this.projectId).subscribe(
         () => {
-          console.log('Project created successfully');
-          this.router.navigate(['']);
+          console.log('Project deleted successfully');
+          this.router.navigate(['']); // Navigate to a different route after deletion
         },
         (error) => {
-          console.error('Error creating project:', error);
+          console.error('Error deleting project:', error);
         },
       );
+    } else {
+      console.error('Project ID is not defined.');
     }
+  }
+
+  ngOnInit() {
+    // Check if there's a project ID in the route to determine if it's edit mode
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.projectId = +id;
+        this.isEdit = true;
+        // Optionally load the project details and populate the form
+      }
+    });
   }
 }

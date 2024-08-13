@@ -19,6 +19,7 @@ export class AuthService {
   private registerApi = 'http://localhost:8080/auth/register';
   private addProjectApi = 'http://localhost:8080/api/v1/projects/create';
   private listProjectsApi = 'http://localhost:8080/api/v1/projects/list';
+  private deleteProjectApi = 'http://localhost:8080/api/v1/projects/delete'; // Endpoint for deleting projects
 
   constructor(private http: HttpClient) {}
 
@@ -49,5 +50,14 @@ export class AuthService {
       `${this.listProjectsApi}?start=${start}&end=${end}`,
       { headers },
     );
+  }
+
+  deleteProject(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.delete(`${this.deleteProjectApi}/${id}`, { headers });
   }
 }
