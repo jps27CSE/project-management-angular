@@ -3,11 +3,12 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { ProjectListComponent } from '../project-list/project-list.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { DateFormatPipe } from './date-format.pipe';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ProjectListComponent, NgForOf, NgIf],
+  imports: [ProjectListComponent, NgForOf, NgIf, DateFormatPipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
