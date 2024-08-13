@@ -72,7 +72,7 @@ export class AddProjectComponent {
       this.authService.addProject(data).subscribe(
         () => {
           console.log('Project created successfully');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['']);
         },
         (error) => {
           console.error('Error creating project:', error);

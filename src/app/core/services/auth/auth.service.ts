@@ -39,12 +39,15 @@ export class AuthService {
     return this.http.post(this.addProjectApi, data, { headers });
   }
 
-  getProjects(): Observable<any[]> {
+  getProjects(start: string, end: string): Observable<any[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-    return this.http.get<any[]>(this.listProjectsApi, { headers });
+    return this.http.get<any[]>(
+      `${this.listProjectsApi}?start=${start}&end=${end}`,
+      { headers },
+    );
   }
 }
