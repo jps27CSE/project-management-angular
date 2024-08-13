@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 interface LoginResponse {
@@ -30,7 +30,11 @@ export class AuthService {
   }
 
   addProject(data: any): Observable<any> {
-    // Add this method to create a project
-    return this.http.post(this.addProjectApi, data, { responseType: 'text' });
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.post(this.addProjectApi, data, { headers });
   }
 }
