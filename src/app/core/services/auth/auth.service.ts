@@ -18,6 +18,7 @@ export class AuthService {
   private loginApi = 'http://localhost:8080/auth/login';
   private registerApi = 'http://localhost:8080/auth/register';
   private addProjectApi = 'http://localhost:8080/api/v1/projects/create';
+  private listProjectsApi = 'http://localhost:8080/api/v1/projects/list';
 
   constructor(private http: HttpClient) {}
 
@@ -36,5 +37,14 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
     return this.http.post(this.addProjectApi, data, { headers });
+  }
+
+  getProjects(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.get<any[]>(this.listProjectsApi, { headers });
   }
 }
