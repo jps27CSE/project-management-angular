@@ -1,0 +1,87 @@
+<!-- add-project.component.html -->
+<div class="container mx-auto px-4 py-6">
+  <form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Project Name</span>
+      </label>
+      <input
+        type="text"
+        formControlName="name"
+        placeholder="Enter project name"
+        class="input input-bordered"
+        required
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Project Introduction</span>
+      </label>
+      <textarea
+        formControlName="intro"
+        placeholder="Enter project introduction"
+        class="textarea textarea-bordered"
+        required
+      ></textarea>
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Project Status</span>
+      </label>
+      <input
+        type="number"
+        formControlName="status"
+        placeholder="Enter project status"
+        class="input input-bordered"
+        required
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Start Date & Time</span>
+      </label>
+      <input
+        type="datetime-local"
+        formControlName="startDate"
+        class="input input-bordered"
+        required
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">End Date & Time</span>
+      </label>
+      <input
+        type="datetime-local"
+        formControlName="endDate"
+        class="input input-bordered"
+        required
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Project Member Usernames</span>
+      </label>
+      <div formArrayName="projectMemberUserNames" class="space-y-2">
+        <div *ngFor="let member of projectMemberUserNames.controls; let i = index" [formGroupName]="i" class="flex space-x-2">
+          <input
+            type="text"
+            [formControlName]="i"
+            placeholder="Enter member username"
+            class="input input-bordered w-full"
+            required
+          />
+          <button type="button" (click)="removeMember(i)" class="btn btn-error">Remove</button>
+        </div>
+        <button type="button" (click)="addMember()" class="btn btn-secondary mt-2">Add Member</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-full">Create Project</button>
+  </form>
+</div>
