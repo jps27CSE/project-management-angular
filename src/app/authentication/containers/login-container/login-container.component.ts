@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginComponent } from '../../views/login/login.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-container',
@@ -10,7 +11,10 @@ import { AuthService } from '../../../core/services/auth/auth.service';
   styleUrl: './login-container.component.css',
 })
 export class LoginContainerComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   handleLoginSubmit(formData: { username: string; password: string }) {
     const data = {
@@ -20,10 +24,10 @@ export class LoginContainerComponent {
 
     this.authService.loginUser(data).subscribe(
       (response) => {
-      
         if (response) {
           // Store the token in local storage
           localStorage.setItem('token', response);
+          this.router.navigate(['']);
           console.log('User logged in successfully');
         } else {
           console.log('Login failed');
