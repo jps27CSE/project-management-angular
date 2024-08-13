@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
-  startDate?: string;
-  endDate?: string;
+  startDate: string = '';
+  endDate: string = '';
 
   constructor(
     private authService: AuthService,
@@ -22,10 +22,10 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Set the default start and end date to today's date
-    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-    this.startDate = currentDate;
-    this.endDate = currentDate;
+    // Set the default start and end date to today's date with time
+    const currentDate = new Date();
+    this.startDate = this.formatDate(currentDate);
+    this.endDate = this.formatDate(currentDate);
 
     // Check if the token exists in local storage
     const token = localStorage.getItem('token');
@@ -53,10 +53,21 @@ export class DashboardComponent implements OnInit {
   onDateChange(type: 'start' | 'end', event: any) {
     const selectedDate = event.target.value;
     if (type === 'start') {
-      this.startDate = selectedDate;
+      this.startDate = this.formatDate(new Date(selectedDate));
     } else {
-      this.endDate = selectedDate;
+      this.endDate = this.formatDate(new Date(selectedDate));
     }
-    this.fetchProjects(this.startDate!, this.endDate!);
+    this.fetchProjects(this.startDate, this.endDate);
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 }
