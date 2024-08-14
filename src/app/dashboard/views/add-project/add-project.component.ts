@@ -59,6 +59,8 @@ export class AddProjectComponent implements OnInit {
   onSubmit() {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
+
+      // Filter out any blank member fields
       const filteredMemberUsernames = formData.projectMemberUsernames.filter(
         (username: string) => username.trim() !== '',
       );
@@ -67,8 +69,8 @@ export class AddProjectComponent implements OnInit {
         name: formData.name,
         intro: formData.intro,
         status: formData.status,
-        startDateTime: format(new Date(formData.startDateTime), 'yyyy-MM-dd'),
-        endDateTime: format(new Date(formData.endDateTime), 'yyyy-MM-dd'),
+        startDate: format(new Date(formData.startDate), 'yyyy-MM-dd'),
+        endDate: format(new Date(formData.endDate), 'yyyy-MM-dd'),
         projectMemberUsernames: filteredMemberUsernames,
       };
 
