@@ -37,19 +37,19 @@
         <input formControlName="endDate" type="date" class="input input-bordered w-full" required />
       </div>
 
-      <div formArrayName="projectMemberUsernames">
-        <div *ngFor="let member of projectMemberUsernames.controls; let i = index" class="mb-4">
-          <div class="form-control flex items-center">
-            <label class="label w-full">
-              <span class="label-text">Project Member Username {{ i + 1 }}</span>
-            </label>
-            <div class="flex">
-              <input [formControlName]="i" type="text" placeholder="Enter username" class="input input-bordered flex-1 mr-2" />
-              <button type="button" (click)="removeMember(i)" class="btn btn-secondary">Remove</button>
-            </div>
-          </div>
-        </div>
-        <button type="button" (click)="addMember()" class="btn btn-primary w-full">Add Member</button>
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Project Members</span>
+        </label>
+        <p-autoComplete
+          [(ngModel)]="selectedItems"
+          [suggestions]="items"
+          (completeMethod)="search($event)"
+          [multiple]="true"
+          field="name"
+          placeholder="Add project members"
+          class="w-full"
+        ></p-autoComplete>
       </div>
 
       <div class="form-control mt-6">

@@ -9,13 +9,16 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgForOf],
+  imports: [FormsModule, ReactiveFormsModule, NgForOf, AutoCompleteModule],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
@@ -59,7 +62,6 @@ export class AddProjectComponent implements OnInit {
         status: project.status,
         startDate: project.startDate,
         endDate: project.endDate,
-        projectMemberUsernames: project.projectMemberUsernames,
       });
       this.selectedItems = project.projectMemberUsernames.map(
         (username: any) => ({
