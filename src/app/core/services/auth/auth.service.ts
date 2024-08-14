@@ -19,7 +19,9 @@ export class AuthService {
   private registerApi = 'http://localhost:8080/auth/register';
   private addProjectApi = 'http://localhost:8080/api/v1/projects/create';
   private listProjectsApi = 'http://localhost:8080/api/v1/projects/list';
-  private deleteProjectApi = 'http://localhost:8080/api/v1/projects/delete'; // Endpoint for deleting projects
+  private deleteProjectApi = 'http://localhost:8080/api/v1/projects/delete';
+  private getProjectApi = 'http://localhost:8080/api/v1/projects/get';
+  private updateProjectApi = 'http://localhost:8080/api/v1/projects/edit';
 
   constructor(private http: HttpClient) {}
 
@@ -59,5 +61,23 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
     return this.http.delete(`${this.deleteProjectApi}/${id}`, { headers });
+  }
+
+  getProject(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.get<any>(`${this.getProjectApi}/${id}`, { headers });
+  }
+
+  updateProject(id: number, data: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.put(`${this.updateProjectApi}/${id}`, data, { headers });
   }
 }
