@@ -21,6 +21,7 @@ import { NgForOf, NgIf } from '@angular/common';
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
+  readonly maxMembers = 5;
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +47,9 @@ export class AddProjectComponent implements OnInit {
   }
 
   addMember() {
-    this.projectMemberUsernames.push(this.fb.control(''));
+    if (this.projectMemberUsernames.length < this.maxMembers) {
+      this.projectMemberUsernames.push(this.fb.control(''));
+    }
   }
 
   removeMember(index: number) {
@@ -56,19 +59,17 @@ export class AddProjectComponent implements OnInit {
   onSubmit() {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
+      const filteredMemberUsernames = formData.projectMemberUsernames.filter(
+        (username: string) => username.trim() !== '',
+      );
+
       const data = {
         name: formData.name,
         intro: formData.intro,
         status: formData.status,
-        startDateTime: format(
-          new Date(formData.startDateTime),
-          "yyyy-MM-dd'T'HH:mm:ss",
-        ),
-        endDateTime: format(
-          new Date(formData.endDateTime),
-          "yyyy-MM-dd'T'HH:mm:ss",
-        ),
-        projectMemberUsernames: formData.projectMemberUsernames,
+        startDateTime: format(new Date(formData.startDateTime), 'yyyy-MM-dd'),
+        endDateTime: format(new Date(formData.endDateTime), 'yyyy-MM-dd'),
+        projectMemberUsernames: filteredMemberUsernames,
       };
 
       if (this.projectId !== undefined) {

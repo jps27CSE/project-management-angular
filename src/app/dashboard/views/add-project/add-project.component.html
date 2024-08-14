@@ -25,16 +25,16 @@
 
       <div class="form-control mb-4">
         <label class="label">
-          <span class="label-text">Start Date & Time</span>
+          <span class="label-text">Start Date</span>
         </label>
-        <input formControlName="startDateTime" type="datetime-local" class="input input-bordered w-full" required />
+        <input formControlName="startDateTime" type="date" class="input input-bordered w-full" required />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
-          <span class="label-text">End Date & Time</span>
+          <span class="label-text">End Date</span>
         </label>
-        <input formControlName="endDateTime" type="datetime-local" class="input input-bordered w-full" required />
+        <input formControlName="endDateTime" type="date" class="input input-bordered w-full" required />
       </div>
 
       <div formArrayName="projectMemberUsernames">
@@ -53,9 +53,8 @@
       </div>
 
       <div class="form-control mt-6">
-        <button type="submit" class="btn btn-primary w-full">{{ projectId ? 'Update Project' : 'Create Project' }}</button>
+        <button type="submit" class="btn btn-primary w-full">Create Project</button>
       </div>
     </form>
-
   </div>
 </div>
