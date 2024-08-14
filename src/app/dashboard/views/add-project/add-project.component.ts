@@ -1,27 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
-  standalone: true,
-  imports: [ReactiveFormsModule, NgForOf, NgIf],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
-  readonly maxMembers = 5;
 
   constructor(
     private fb: FormBuilder,
@@ -33,8 +23,8 @@ export class AddProjectComponent implements OnInit {
       name: ['', [Validators.required]],
       intro: ['', [Validators.required]],
       status: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      startDateTime: ['', [Validators.required]],
-      endDateTime: ['', [Validators.required]],
+      startDate: ['', [Validators.required]],
+      endDate: ['', [Validators.required]],
       projectMemberUsernames: this.fb.array(
         [this.fb.control('')],
         Validators.required,
@@ -47,7 +37,7 @@ export class AddProjectComponent implements OnInit {
   }
 
   addMember() {
-    if (this.projectMemberUsernames.length < this.maxMembers) {
+    if (this.projectMemberUsernames.length < 5) {
       this.projectMemberUsernames.push(this.fb.control(''));
     }
   }
@@ -60,31 +50,6 @@ export class AddProjectComponent implements OnInit {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
 
-      // Validate and format start date
-      let formattedStartDate = '';
-      if (formData.startDate) {
-        try {
-          formattedStartDate = format(
-            new Date(formData.startDate),
-            'yyyy-MM-dd',
-          );
-        } catch (error) {
-          console.error('Invalid start date:', error);
-          return; // Stop the submission if the date is invalid
-        }
-      }
-
-      // Validate and format end date
-      let formattedEndDate = '';
-      if (formData.endDate) {
-        try {
-          formattedEndDate = format(new Date(formData.endDate), 'yyyy-MM-dd');
-        } catch (error) {
-          console.error('Invalid end date:', error);
-          return; // Stop the submission if the date is invalid
-        }
-      }
-
       // Filter out any blank member fields
       const filteredMemberUsernames = formData.projectMemberUsernames.filter(
         (username: string) => username.trim() !== '',
@@ -93,9 +58,13 @@ export class AddProjectComponent implements OnInit {
       const data = {
         name: formData.name,
         intro: formData.intro,
-        status: formData.status,
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
+        status: String(formData.status), // Convert status to string to match API format
+        startDate: formData.startDate
+          ? format(new Date(formData.startDate), 'yyyy-MM-dd')
+          : null,
+        endDate: formData.endDate
+          ? format(new Date(formData.endDate), 'yyyy-MM-dd')
+          : null,
         projectMemberUsernames: filteredMemberUsernames,
       };
 
@@ -112,22 +81,6 @@ export class AddProjectComponent implements OnInit {
           },
         );
       }
-    }
-  }
-
-  deleteProject() {
-    if (this.projectId !== undefined) {
-      this.authService.deleteProject(this.projectId).subscribe(
-        () => {
-          console.log('Project deleted successfully');
-          this.router.navigate(['']); // Navigate to a different route after deletion
-        },
-        (error) => {
-          console.error('Error deleting project:', error);
-        },
-      );
-    } else {
-      console.error('Project ID is not defined.');
     }
   }
 
