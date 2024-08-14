@@ -35,4 +35,12 @@ export class ProjectListComponent {
       console.error('Project ID is not defined.');
     }
   }
+
+  editProject() {
+    if (this.project?.id) {
+      this.router.navigate([`/edit/${this.project.id}`]);
+    } else {
+      console.error('Project ID is not defined.');
+    }
+  }
 }
