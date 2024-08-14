@@ -60,6 +60,31 @@ export class AddProjectComponent implements OnInit {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
 
+      // Validate and format start date
+      let formattedStartDate = '';
+      if (formData.startDate) {
+        try {
+          formattedStartDate = format(
+            new Date(formData.startDate),
+            'yyyy-MM-dd',
+          );
+        } catch (error) {
+          console.error('Invalid start date:', error);
+          return; // Stop the submission if the date is invalid
+        }
+      }
+
+      // Validate and format end date
+      let formattedEndDate = '';
+      if (formData.endDate) {
+        try {
+          formattedEndDate = format(new Date(formData.endDate), 'yyyy-MM-dd');
+        } catch (error) {
+          console.error('Invalid end date:', error);
+          return; // Stop the submission if the date is invalid
+        }
+      }
+
       // Filter out any blank member fields
       const filteredMemberUsernames = formData.projectMemberUsernames.filter(
         (username: string) => username.trim() !== '',
@@ -69,8 +94,8 @@ export class AddProjectComponent implements OnInit {
         name: formData.name,
         intro: formData.intro,
         status: formData.status,
-        startDate: format(new Date(formData.startDate), 'yyyy-MM-dd'),
-        endDate: format(new Date(formData.endDate), 'yyyy-MM-dd'),
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
         projectMemberUsernames: filteredMemberUsernames,
       };
 
