@@ -21,16 +21,23 @@ export class ProjectListComponent {
 
   deleteProject() {
     if (this.project?.id) {
-      this.authService.deleteProject(this.project.id).subscribe(
-        () => {
-          console.log('Project deleted successfully');
-          // Optionally refresh the list or navigate away
-          this.router.navigate(['']); // Navigate to a different route after deletion
-        },
-        (error) => {
-          console.error('Error deleting project:', error);
-        },
+      // Confirm deletion with a popup
+      const confirmation = window.confirm(
+        'Are you sure you want to delete this project? This action cannot be undone.',
       );
+
+      if (confirmation) {
+        this.authService.deleteProject(this.project.id).subscribe(
+          () => {
+            console.log('Project deleted successfully');
+            // Optionally refresh the list or navigate away
+            this.router.navigate(['']); // Navigate to a different route after deletion
+          },
+          (error) => {
+            console.error('Error deleting project:', error);
+          },
+        );
+      }
     } else {
       console.error('Project ID is not defined.');
     }
