@@ -83,6 +83,11 @@ export class AuthService {
   }
 
   getUsernames(): Observable<string[]> {
-    return this.http.get<string[]>(this.getUsernamesApi);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.get<string[]>(this.getUsernamesApi, { headers });
   }
 }
