@@ -34,6 +34,7 @@ export class ProjectListComponent {
             this.router.navigate(['']); // Navigate to a different route after deletion
           },
           (error) => {
+            window.confirm('You are not ownser of this project');
             console.error('Error deleting project:', error);
           },
         );
