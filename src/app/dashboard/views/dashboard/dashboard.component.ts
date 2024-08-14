@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Set the default start and end date to today's date with time
+    // Set the default start and end date to today's date
     const currentDate = new Date();
     this.startDate = this.formatDate(currentDate);
     this.endDate = this.formatDate(currentDate);
@@ -61,15 +61,12 @@ export class DashboardComponent implements OnInit {
     this.fetchProjects(this.startDate, this.endDate);
   }
 
-  // Format date to YYYY-MM-DDTHH:MM:SS
+  // Format date to YYYY-MM-DD
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    return `${year}-${month}-${day}`;
   }
 }
