@@ -1,26 +1,28 @@
-<div class="container mx-auto mt-8">
-  <h1 class="text-2xl font-bold mb-4">Project Dashboard</h1>
+<div class="container mx-auto mt-8 px-4">
+  <h1 class="text-2xl font-bold mb-8 text-center">Project Dashboard</h1>
 
-  <div class="flex space-x-4 mb-4">
-    <div>
-      <label for="startDatePicker" class="block text-lg font-medium mb-2">Start Date:</label>
-      <input
-        type="date"
-        id="startDatePicker"
-        class="input input-bordered w-full max-w-xs"
-        [value]="startDate"
-        (change)="onDateChange('start', $event)"
-      />
-    </div>
-    <div>
-      <label for="endDatePicker" class="block text-lg font-medium mb-2">End Date:</label>
-      <input
-        type="date"
-        id="endDatePicker"
-        class="input input-bordered w-full max-w-xs"
-        [value]="endDate"
-        (change)="onDateChange('end', $event)"
-      />
+  <div class="flex flex-col items-center mb-8">
+    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+      <div>
+        <label for="startDatePicker" class="block text-lg font-medium mb-2">Start Date:</label>
+        <input
+          type="date"
+          id="startDatePicker"
+          class="input input-bordered w-full max-w-xs"
+          [value]="startDate"
+          (change)="onDateChange('start', $event)"
+        />
+      </div>
+      <div>
+        <label for="endDatePicker" class="block text-lg font-medium mb-2">End Date:</label>
+        <input
+          type="date"
+          id="endDatePicker"
+          class="input input-bordered w-full max-w-xs"
+          [value]="endDate"
+          (change)="onDateChange('end', $event)"
+        />
+      </div>
     </div>
   </div>
 
@@ -29,6 +31,6 @@
   </div>
 
   <ng-template #noProjects>
-    <p>No projects found.</p>
+    <p class="text-center">No projects found.</p>
   </ng-template>
 </div>
