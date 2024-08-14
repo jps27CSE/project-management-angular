@@ -10,11 +10,12 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { format } from 'date-fns';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgForOf],
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.css'],
 })
