@@ -6,50 +6,50 @@
         <label class="label">
           <span class="label-text">Name</span>
         </label>
-        <input formControlName="name" type="text" placeholder="Project Name" class="input input-bordered w-full" />
+        <input formControlName="name" type="text" placeholder="Project Name" class="input input-bordered w-full" required />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Intro</span>
         </label>
-        <input formControlName="intro" type="text" placeholder="Project Introduction" class="input input-bordered w-full" />
+        <input formControlName="intro" type="text" placeholder="Project Introduction" class="input input-bordered w-full" required />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Status</span>
         </label>
-        <input formControlName="status" type="number" placeholder="Status (number)" class="input input-bordered w-full" />
+        <input formControlName="status" type="number" placeholder="Status (number)" class="input input-bordered w-full" required />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Start Date</span>
         </label>
-        <input formControlName="startDate" type="date" class="input input-bordered w-full" />
+        <input formControlName="startDate" type="date" class="input input-bordered w-full" required />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">End Date</span>
         </label>
-        <input formControlName="endDate" type="date" class="input input-bordered w-full" />
+        <input formControlName="endDate" type="date" class="input input-bordered w-full" required />
       </div>
 
-      <div class="form-control mb-4">
-        <label class="label">
-          <span class="label-text">Project Members</span>
-        </label>
-        <p-autoComplete
-          [formControl]="addProjectForm.controls['projectMemberUsernames']"
-          [suggestions]="items"
-          (completeMethod)="search($event)"
-          [multiple]="true"
-          field="name"
-          placeholder="Add project members"
-          class="w-full"
-        ></p-autoComplete>
+      <div formArrayName="projectMemberUsernames">
+        <div *ngFor="let member of projectMemberUsernames.controls; let i = index" class="mb-4">
+          <div class="form-control flex items-center">
+            <label class="label w-full">
+              <span class="label-text">Project Member Username {{ i + 1 }}</span>
+            </label>
+            <div class="flex">
+              <input [formControlName]="i" type="text" placeholder="Enter username" class="input input-bordered flex-1 mr-2" />
+              <button type="button" (click)="removeMember(i)" class="btn btn-secondary">Remove</button>
+            </div>
+          </div>
+        </div>
+        <button type="button" (click)="addMember()" class="btn btn-primary w-full">Add Member</button>
       </div>
 
       <div class="form-control mt-6">

@@ -2,8 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormControl,
+  FormArray,
   Validators,
+  FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -25,6 +26,7 @@ import { NgForOf } from '@angular/common';
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
+  selectedItems: any[] = [];
   items: any[] = []; // Array for autocomplete suggestions
 
   constructor(
@@ -39,7 +41,7 @@ export class AddProjectComponent implements OnInit {
       status: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
-      projectMemberUsernames: [[], [Validators.required]],
+      projectMemberUsernames: this.fb.array([]), // Initialize as FormArray
     });
   }
 
@@ -53,6 +55,18 @@ export class AddProjectComponent implements OnInit {
     });
   }
 
+  get projectMemberUsernames(): FormArray {
+    return this.addProjectForm.get('projectMemberUsernames') as FormArray;
+  }
+
+  addMember() {
+    this.projectMemberUsernames.push(new FormControl('')); // Add empty FormControl
+  }
+
+  removeMember(index: number) {
+    this.projectMemberUsernames.removeAt(index); // Remove FormControl at index
+  }
+
   loadProjectDetails(id: number) {
     this.authService.getProject(id).subscribe((project) => {
       this.addProjectForm.patchValue({
@@ -62,11 +76,13 @@ export class AddProjectComponent implements OnInit {
         startDate: project.startDate,
         endDate: project.endDate,
       });
-      this.addProjectForm.controls['projectMemberUsernames'].setValue(
-        project.projectMemberUsernames.map((username: any) => ({
-          name: username,
-        })),
-      );
+
+      const projectMembersArray = this.projectMemberUsernames;
+      projectMembersArray.clear(); // Clear existing controls
+
+      project.projectMemberUsernames.forEach((username: string) => {
+        projectMembersArray.push(new FormControl(username)); // Add FormControl for each username
+      });
     });
   }
 
@@ -90,9 +106,7 @@ export class AddProjectComponent implements OnInit {
         endDate: formData.endDate
           ? format(new Date(formData.endDate), 'yyyy-MM-dd')
           : null,
-        projectMemberUsernames: formData.projectMemberUsernames.map(
-          (item: any) => item.name,
-        ),
+        projectMemberUsernames: formData.projectMemberUsernames, // Use form data directly
       };
 
       if (this.projectId !== undefined) {
