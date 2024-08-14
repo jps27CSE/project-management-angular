@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoginComponent } from '../../views/login/login.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
@@ -10,11 +10,18 @@ import { Router } from '@angular/router';
   templateUrl: './login-container.component.html',
   styleUrl: './login-container.component.css',
 })
-export class LoginContainerComponent {
+export class LoginContainerComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
+
+  ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.router.navigate(['']);
+    }
+  }
 
   handleLoginSubmit(formData: { username: string; password: string }) {
     const data = {

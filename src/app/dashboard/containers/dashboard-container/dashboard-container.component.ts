@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DashboardComponent } from '../../views/dashboard/dashboard.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-container',
@@ -9,4 +9,14 @@ import { RouterLink } from '@angular/router';
   templateUrl: './dashboard-container.component.html',
   styleUrl: './dashboard-container.component.css',
 })
-export class DashboardContainerComponent {}
+export class DashboardContainerComponent {
+  constructor(private router: Router) {}
+
+  logout() {
+    // Remove the token from local storage
+    localStorage.removeItem('authToken');
+
+    // Redirect to the login page
+    this.router.navigate(['/login']);
+  }
+}
