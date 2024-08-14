@@ -22,6 +22,7 @@ export class AuthService {
   private deleteProjectApi = 'http://localhost:8080/api/v1/projects/delete';
   private getProjectApi = 'http://localhost:8080/api/v1/projects/get';
   private updateProjectApi = 'http://localhost:8080/api/v1/projects/edit';
+  private getUsernamesApi = 'http://localhost:8080/api/users/usernames'; // New API endpoint
 
   constructor(private http: HttpClient) {}
 
@@ -79,5 +80,9 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
     return this.http.put(`${this.updateProjectApi}/${id}`, data, { headers });
+  }
+
+  getUsernames(): Observable<string[]> {
+    return this.http.get<string[]>(this.getUsernamesApi);
   }
 }

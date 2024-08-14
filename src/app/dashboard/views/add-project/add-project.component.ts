@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  FormArray,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -10,6 +9,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { NgForOf } from '@angular/common';
 
 @Component({
@@ -22,6 +22,8 @@ import { NgForOf } from '@angular/common';
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
+  selectedItems: any[] = [];
+  items: any[] = []; // Array for autocomplete suggestions
 
   constructor(
     private fb: FormBuilder,
@@ -35,35 +37,47 @@ export class AddProjectComponent implements OnInit {
       status: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
-      projectMemberUsernames: this.fb.array(
-        [this.fb.control('')],
-        Validators.required,
-      ),
+      projectMemberUsernames: [[], [Validators.required]],
     });
   }
 
-  get projectMemberUsernames() {
-    return this.addProjectForm.get('projectMemberUsernames') as FormArray;
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.projectId = +id;
+        this.loadProjectDetails(this.projectId); // Load project details if in edit mode
+      }
+    });
   }
 
-  addMember() {
-    if (this.projectMemberUsernames.length < 5) {
-      this.projectMemberUsernames.push(this.fb.control(''));
-    }
+  loadProjectDetails(id: number) {
+    this.authService.getProject(id).subscribe((project) => {
+      this.addProjectForm.patchValue({
+        name: project.name,
+        intro: project.intro,
+        status: project.status,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        projectMemberUsernames: project.projectMemberUsernames,
+      });
+      this.selectedItems = project.projectMemberUsernames.map(
+        (username: any) => ({
+          name: username,
+        }),
+      );
+    });
   }
 
-  removeMember(index: number) {
-    this.projectMemberUsernames.removeAt(index);
+  search(event: AutoCompleteCompleteEvent) {
+    this.authService.getUsernames().subscribe((usernames) => {
+      this.items = usernames.map((username) => ({ name: username }));
+    });
   }
 
   onSubmit() {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
-
-      // Filter out any blank member fields
-      const filteredMemberUsernames = formData.projectMemberUsernames.filter(
-        (username: string) => username.trim() !== '',
-      );
 
       const data = {
         name: formData.name,
@@ -75,11 +89,19 @@ export class AddProjectComponent implements OnInit {
         endDate: formData.endDate
           ? format(new Date(formData.endDate), 'yyyy-MM-dd')
           : null,
-        projectMemberUsernames: filteredMemberUsernames,
+        projectMemberUsernames: this.selectedItems.map((item) => item.name),
       };
 
       if (this.projectId !== undefined) {
-        // Handle update logic if needed
+        this.authService.updateProject(this.projectId, data).subscribe(
+          () => {
+            console.log('Project updated successfully');
+            this.router.navigate(['']);
+          },
+          (error) => {
+            console.error('Error updating project:', error);
+          },
+        );
       } else {
         this.authService.addProject(data).subscribe(
           () => {
@@ -92,16 +114,5 @@ export class AddProjectComponent implements OnInit {
         );
       }
     }
-  }
-
-  ngOnInit() {
-    // Check if there's a project ID in the route to determine if it's edit mode
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.projectId = +id;
-        // Optionally load the project details and populate the form
-      }
-    });
   }
 }
