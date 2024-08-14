@@ -1,11 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-add-project',
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
