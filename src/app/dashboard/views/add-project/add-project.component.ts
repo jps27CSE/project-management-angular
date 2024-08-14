@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
+  FormControl,
   Validators,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
@@ -18,14 +18,13 @@ import { NgForOf } from '@angular/common';
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgForOf, AutoCompleteModule],
+  imports: [AutoCompleteModule, NgForOf, ReactiveFormsModule],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
   @Input() projectId?: number;
-  selectedItems: any[] = [];
   items: any[] = []; // Array for autocomplete suggestions
 
   constructor(
@@ -63,10 +62,10 @@ export class AddProjectComponent implements OnInit {
         startDate: project.startDate,
         endDate: project.endDate,
       });
-      this.selectedItems = project.projectMemberUsernames.map(
-        (username: any) => ({
+      this.addProjectForm.controls['projectMemberUsernames'].setValue(
+        project.projectMemberUsernames.map((username: any) => ({
           name: username,
-        }),
+        })),
       );
     });
   }
@@ -91,7 +90,9 @@ export class AddProjectComponent implements OnInit {
         endDate: formData.endDate
           ? format(new Date(formData.endDate), 'yyyy-MM-dd')
           : null,
-        projectMemberUsernames: this.selectedItems.map((item) => item.name),
+        projectMemberUsernames: formData.projectMemberUsernames.map(
+          (item: any) => item.name,
+        ),
       };
 
       if (this.projectId !== undefined) {

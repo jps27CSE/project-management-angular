@@ -6,35 +6,35 @@
         <label class="label">
           <span class="label-text">Name</span>
         </label>
-        <input formControlName="name" type="text" placeholder="Project Name" class="input input-bordered w-full" required />
+        <input formControlName="name" type="text" placeholder="Project Name" class="input input-bordered w-full" />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Intro</span>
         </label>
-        <input formControlName="intro" type="text" placeholder="Project Introduction" class="input input-bordered w-full" required />
+        <input formControlName="intro" type="text" placeholder="Project Introduction" class="input input-bordered w-full" />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Status</span>
         </label>
-        <input formControlName="status" type="number" placeholder="Status (number)" class="input input-bordered w-full" required />
+        <input formControlName="status" type="number" placeholder="Status (number)" class="input input-bordered w-full" />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">Start Date</span>
         </label>
-        <input formControlName="startDate" type="date" class="input input-bordered w-full" required />
+        <input formControlName="startDate" type="date" class="input input-bordered w-full" />
       </div>
 
       <div class="form-control mb-4">
         <label class="label">
           <span class="label-text">End Date</span>
         </label>
-        <input formControlName="endDate" type="date" class="input input-bordered w-full" required />
+        <input formControlName="endDate" type="date" class="input input-bordered w-full" />
       </div>
 
       <div class="form-control mb-4">
@@ -42,7 +42,7 @@
           <span class="label-text">Project Members</span>
         </label>
         <p-autoComplete
-          [(ngModel)]="selectedItems"
+          [formControl]="addProjectForm.controls['projectMemberUsernames']"
           [suggestions]="items"
           (completeMethod)="search($event)"
           [multiple]="true"
