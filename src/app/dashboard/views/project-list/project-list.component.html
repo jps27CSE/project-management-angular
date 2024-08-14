@@ -21,8 +21,16 @@
     <div class="flex flex-col space-y-1">
       <span class="font-medium text-gray-700">Members:</span>
       <div class="flex flex-wrap gap-2">
-        <span *ngIf="project.projectMemberUsernames.length === 0" class="text-gray-600">No members</span>
-        <span *ngIf="project.projectMemberUsernames.length > 0" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full" *ngFor="let username of project.projectMemberUsernames">{{ username }}</span>
+        <!-- Display "No members" if the list is empty -->
+        <ng-container *ngIf="project.projectMemberUsernames.length === 0">
+          <span class="text-gray-600">No members</span>
+        </ng-container>
+        <!-- Display member usernames if the list is not empty -->
+        <ng-container *ngIf="project.projectMemberUsernames.length > 0">
+          <span *ngFor="let username of project.projectMemberUsernames" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
+            {{ username }}
+          </span>
+        </ng-container>
       </div>
     </div>
   </div>
