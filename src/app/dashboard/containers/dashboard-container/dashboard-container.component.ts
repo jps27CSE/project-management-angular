@@ -14,7 +14,7 @@ export class DashboardContainerComponent {
 
   logout() {
     // Remove the token from local storage
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
 
     // Redirect to the login page under the correct path
     this.router.navigate(['/auth/login']);
