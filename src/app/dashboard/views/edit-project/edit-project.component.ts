@@ -23,6 +23,13 @@ export class EditProjectComponent implements OnInit {
   editProjectForm: FormGroup;
   projectId!: number;
 
+  // Define the mapping between numbers and enum values
+  statusMapping: { [key: number]: string } = {
+    1: 'START',
+    2: 'PRE',
+    3: 'END',
+  };
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -66,10 +73,13 @@ export class EditProjectComponent implements OnInit {
           (username: string) => username.trim() !== '',
         );
 
+        // Map the numeric status value to the corresponding enum string
+        const statusEnum = this.statusMapping[formData.status];
+
         const data = {
           name: formData.name,
           intro: formData.intro,
-          status: String(formData.status),
+          status: statusEnum, // Use the enum string value here
           startDate: formData.startDate
             ? format(new Date(formData.startDate), 'yyyy-MM-dd')
             : null,
@@ -106,7 +116,7 @@ export class EditProjectComponent implements OnInit {
       this.editProjectForm.patchValue({
         name: project.name,
         intro: project.intro,
-        status: project.status, // Set the status value here
+        status: this.getStatusKey(project.status), // Convert the enum string back to a number for the form
         startDate: project.startDate,
         endDate: project.endDate,
       });
@@ -115,5 +125,15 @@ export class EditProjectComponent implements OnInit {
         this.projectMemberUsernames.push(this.fb.control(username));
       });
     });
+  }
+
+  // Convert enum string back to its corresponding numeric value for the form
+  private getStatusKey(status: string): number {
+    return parseInt(
+      Object.keys(this.statusMapping).find(
+        (key) => this.statusMapping[+key] === status,
+      ) || '1',
+      10,
+    );
   }
 }
