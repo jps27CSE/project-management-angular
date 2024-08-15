@@ -30,8 +30,7 @@ export class ProjectListComponent {
         this.authService.deleteProject(this.project.id).subscribe(
           () => {
             console.log('Project deleted successfully');
-            // Optionally refresh the list or navigate away
-            this.router.navigate(['']); // Navigate to a different route after deletion
+            this.router.navigate(['']);
           },
           (error) => {
             window.confirm('You are not owner of this project');

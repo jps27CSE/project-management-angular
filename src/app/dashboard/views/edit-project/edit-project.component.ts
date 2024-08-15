@@ -54,35 +54,43 @@ export class EditProjectComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.editProjectForm.valid) {
-      const formData = this.editProjectForm.value;
+    const confirmation = window.confirm(
+      'Are you sure you want to save the changes to this project?',
+    );
 
-      const filteredMemberUsernames = formData.projectMemberUsernames.filter(
-        (username: string) => username.trim() !== '',
-      );
+    if (confirmation) {
+      if (this.editProjectForm.valid) {
+        const formData = this.editProjectForm.value;
 
-      const data = {
-        name: formData.name,
-        intro: formData.intro,
-        status: String(formData.status),
-        startDate: formData.startDate
-          ? format(new Date(formData.startDate), 'yyyy-MM-dd')
-          : null,
-        endDate: formData.endDate
-          ? format(new Date(formData.endDate), 'yyyy-MM-dd')
-          : null,
-        projectMemberUsernames: filteredMemberUsernames,
-      };
+        const filteredMemberUsernames = formData.projectMemberUsernames.filter(
+          (username: string) => username.trim() !== '',
+        );
 
-      this.authService.updateProject(this.projectId, data).subscribe(
-        () => {
-          console.log('Project updated successfully');
-          this.router.navigate(['']);
-        },
-        (error) => {
-          console.error('Error updating project:', error);
-        },
-      );
+        const data = {
+          name: formData.name,
+          intro: formData.intro,
+          status: String(formData.status),
+          startDate: formData.startDate
+            ? format(new Date(formData.startDate), 'yyyy-MM-dd')
+            : null,
+          endDate: formData.endDate
+            ? format(new Date(formData.endDate), 'yyyy-MM-dd')
+            : null,
+          projectMemberUsernames: filteredMemberUsernames,
+        };
+
+        this.authService.updateProject(this.projectId, data).subscribe(
+          () => {
+            console.log('Project updated successfully');
+            this.router.navigate(['']);
+          },
+          (error) => {
+            console.error('Error updating project:', error);
+          },
+        );
+      }
+    } else {
+      console.log('Project update canceled by the user.');
     }
   }
 
@@ -98,7 +106,7 @@ export class EditProjectComponent implements OnInit {
       this.editProjectForm.patchValue({
         name: project.name,
         intro: project.intro,
-        status: project.status,
+        status: project.status, // Set the status value here
         startDate: project.startDate,
         endDate: project.endDate,
       });
