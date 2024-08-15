@@ -41,9 +41,7 @@ export class RegistrationContainerComponent {
       (error: any) => {
         if (error.status === 500) {
           // Handle specific error with status code 500
-          window.alert(
-            'Username already registered or an internal server error occurred.',
-          );
+          window.alert('Username already registered');
         } else {
           console.error('Registration error', error);
         }

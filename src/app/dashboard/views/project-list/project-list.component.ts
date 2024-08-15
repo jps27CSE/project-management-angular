@@ -33,7 +33,11 @@ export class ProjectListComponent {
             this.router.navigate(['']);
           },
           (error) => {
-            window.confirm('You are not owner of this project');
+            if (error.stutus === 200) {
+              window.confirm('Deleted project successfully');
+            } else {
+              window.confirm('You are not owner of this project');
+            }
             console.error('Error deleting project:', error);
           },
         );
