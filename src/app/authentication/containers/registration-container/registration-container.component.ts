@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RegistrationComponent } from '../../views/registration/registration.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration-container',
@@ -10,7 +11,10 @@ import { AuthService } from '../../../core/services/auth/auth.service';
   styleUrl: './registration-container.component.css',
 })
 export class RegistrationContainerComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   handleRegisterSubmit(formData: {
     name: string;
@@ -29,7 +33,7 @@ export class RegistrationContainerComponent {
         if (response) {
           // Store the token in local storage
           localStorage.setItem('token', response);
-          console.log('User registered successfully');
+          this.router.navigate(['']);
         } else {
           console.log('Registration failed');
         }
