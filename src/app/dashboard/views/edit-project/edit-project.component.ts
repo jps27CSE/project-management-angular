@@ -22,8 +22,8 @@ import { NgForOf } from '@angular/common';
 export class EditProjectComponent implements OnInit {
   editProjectForm: FormGroup;
   projectId!: number;
+  maxMembers = 5;
 
-  // Define the mapping between numbers and enum values
   statusMapping: { [key: number]: string } = {
     1: 'START',
     2: 'PRE',
@@ -51,7 +51,7 @@ export class EditProjectComponent implements OnInit {
   }
 
   addMember() {
-    if (this.projectMemberUsernames.length < 5) {
+    if (this.projectMemberUsernames.length < this.maxMembers) {
       this.projectMemberUsernames.push(this.fb.control(''));
     }
   }
