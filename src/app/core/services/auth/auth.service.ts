@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 interface LoginResponse {
   token: string;
@@ -61,7 +61,25 @@ export class AuthService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-    return this.http.delete(`${this.deleteProjectApi}/${id}`, { headers });
+
+    return this.http
+      .delete(this.deleteProjectApi + `/${id}`, {
+        headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          // Handle JSON response if needed
+          if (response.body) {
+            return response.body;
+          }
+          return {}; // Return empty object if no body
+        }),
+        catchError((error) => {
+          console.error('Error deleting project:', error);
+          return throwError('An error occurred; please try again later.');
+        }),
+      );
   }
 
   getProject(id: number): Observable<any> {

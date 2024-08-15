@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit {
 
   // Handle project deletion
   handleProjectDeletion(projectId: number) {
+    this.projects = this.projects.filter((project) => project.id !== projectId);
     console.log(projectId, 'in handle');
     this.authService.deleteProject(projectId).subscribe(
       () => {

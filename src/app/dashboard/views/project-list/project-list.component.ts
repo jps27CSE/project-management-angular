@@ -22,7 +22,6 @@ export class ProjectListComponent {
 
   deleteProject() {
     if (this.project?.id) {
-      // Confirm deletion with a popup
       const confirmation = window.confirm(
         'Are you sure you want to delete this project? This action cannot be undone.',
       );
@@ -35,7 +34,9 @@ export class ProjectListComponent {
           },
           (error) => {
             if (error.status === 500) {
-              window.alert('You are not the owner of this project ');
+              window.alert(
+                'You are not the owner of this project or an internal server error occurred.',
+              );
             }
             console.error('Error deleting project:', error);
           },
