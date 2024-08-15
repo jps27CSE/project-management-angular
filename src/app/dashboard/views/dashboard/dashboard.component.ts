@@ -69,4 +69,24 @@ export class DashboardComponent implements OnInit {
 
     return `${year}-${month}-${day}`;
   }
+
+  // Handle project deletion
+  handleProjectDeletion(projectId: number) {
+    this.authService.deleteProject(projectId).subscribe(
+      () => {
+        // Remove the deleted project from the array
+        this.projects = this.projects.filter(
+          (project) => project.id !== projectId,
+        );
+      },
+      (error) => {
+        if (error.status === 500) {
+          window.alert(
+            'You are not the owner of this project or an internal server error occurred.',
+          );
+        }
+        console.error('Error deleting project:', error);
+      },
+    );
+  }
 }

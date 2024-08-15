@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { DateFormatPipe } from '../dashboard/date-format.pipe';
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ProjectListComponent {
   @Input() project: any;
+  @Output() delete = new EventEmitter<number>(); // Emit project ID on delete
 
   constructor(
     private authService: AuthService,
@@ -30,13 +31,13 @@ export class ProjectListComponent {
         this.authService.deleteProject(this.project.id).subscribe(
           () => {
             console.log('Project deleted successfully');
-            this.router.navigate(['']);
+            this.delete.emit(this.project.id); // Emit project ID on successful deletion
           },
           (error) => {
-            if (error.stutus === 200) {
-              window.confirm('Deleted project successfully');
-            } else if (error.status === 500) {
-              window.confirm('You are not owner of this project');
+            if (error.status === 500) {
+              window.alert(
+                'You are not the owner of this project or an internal server error occurred.',
+              );
             }
             console.error('Error deleting project:', error);
           },

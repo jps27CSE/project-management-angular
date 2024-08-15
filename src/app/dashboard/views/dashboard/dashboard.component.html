@@ -27,7 +27,7 @@
   </div>
 
   <div *ngIf="projects.length > 0; else noProjects" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    <app-project-list *ngFor="let project of projects" [project]="project"></app-project-list>
+    <app-project-list *ngFor="let project of projects" [project]="project" (delete)="handleProjectDeletion($event)"></app-project-list>
   </div>
 
   <ng-template #noProjects>
