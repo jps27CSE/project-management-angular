@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { ProjectListComponent } from '../project-list/project-list.component';
 import { NgForOf, NgIf } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DateFormatPipe } from './date-format.pipe';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ProjectListComponent, NgForOf, NgIf, DateFormatPipe],
+  imports: [ProjectListComponent, NgForOf, NgIf, DateFormatPipe, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -36,6 +36,14 @@ export class DashboardComponent implements OnInit {
     }
 
     this.fetchProjects(this.startDate, this.endDate);
+  }
+
+  logout() {
+    // Remove the token from local storage
+    localStorage.removeItem('token');
+
+    // Redirect to the login page under the correct path
+    this.router.navigate(['/auth/login']);
   }
 
   // Fetch projects based on the selected date range

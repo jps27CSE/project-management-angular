@@ -10,13 +10,13 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './dashboard-container.component.css',
 })
 export class DashboardContainerComponent {
-  constructor(private router: Router) {}
-
-  logout() {
-    // Remove the token from local storage
-    localStorage.removeItem('token');
-
-    // Redirect to the login page under the correct path
-    this.router.navigate(['/auth/login']);
-  }
+  // constructor(private router: Router) {}
+  //
+  // logout() {
+  //   // Remove the token from local storage
+  //   localStorage.removeItem('token');
+  //
+  //   // Redirect to the login page under the correct path
+  //   this.router.navigate(['/auth/login']);
+  // }
 }
