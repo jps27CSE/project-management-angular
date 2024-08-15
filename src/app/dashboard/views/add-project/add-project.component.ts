@@ -14,12 +14,12 @@ import {
   AutoCompleteCompleteEvent,
   AutoCompleteModule,
 } from 'primeng/autocomplete';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [AutoCompleteModule, NgForOf, ReactiveFormsModule],
+  imports: [AutoCompleteModule, NgForOf, ReactiveFormsModule, NgIf],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
@@ -28,6 +28,7 @@ export class AddProjectComponent implements OnInit {
   @Input() projectId?: number;
   selectedItems: any[] = [];
   items: any[] = []; // Array for autocomplete suggestions
+  maxMembers = 5; // Maximum number of members
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +61,9 @@ export class AddProjectComponent implements OnInit {
   }
 
   addMember() {
-    this.projectMemberUsernames.push(new FormControl('')); // Add empty FormControl
+    if (this.projectMemberUsernames.length < this.maxMembers) {
+      this.projectMemberUsernames.push(new FormControl('')); // Add empty FormControl
+    }
   }
 
   removeMember(index: number) {
