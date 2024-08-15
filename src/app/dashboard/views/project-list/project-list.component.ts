@@ -22,23 +22,32 @@ export class ProjectListComponent {
 
   deleteProject() {
     if (this.project?.id) {
+      // Confirm deletion with a popup
       const confirmation = window.confirm(
         'Are you sure you want to delete this project? This action cannot be undone.',
       );
 
       if (confirmation) {
         this.authService.deleteProject(this.project.id).subscribe(
-          () => {
-            console.log('Project deleted successfully', this.project.id);
-            this.delete.emit(this.project.id);
+          (response) => {
+            console.log('Project deleted successfully:', response);
+            this.delete.emit(this.project.id); // Emit project ID on successful deletion
+            window.location.reload(); // Refresh the page
           },
           (error) => {
+            // Improve error handling and logging
+            console.error('Error deleting project:', error);
             if (error.status === 500) {
               window.alert(
                 'You are not the owner of this project or an internal server error occurred.',
               );
+            } else if (error.status === 403) {
+              window.alert('You are not authorized to delete this project.');
+            } else {
+              window.alert(
+                'An unexpected error occurred. Please try again later.',
+              );
             }
-            console.error('Error deleting project:', error);
           },
         );
       }
