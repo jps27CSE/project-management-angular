@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [RegistrationComponent],
   templateUrl: './registration-container.component.html',
-  styleUrl: './registration-container.component.css',
+  styleUrls: ['./registration-container.component.css'],
 })
 export class RegistrationContainerComponent {
   constructor(
@@ -39,7 +39,14 @@ export class RegistrationContainerComponent {
         }
       },
       (error: any) => {
-        console.error('Registration error', error);
+        if (error.status === 500) {
+          // Handle specific error with status code 500
+          window.alert(
+            'Username already registered or an internal server error occurred.',
+          );
+        } else {
+          console.error('Registration error', error);
+        }
       },
     );
   }
