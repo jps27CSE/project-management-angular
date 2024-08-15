@@ -29,9 +29,9 @@ export class ProjectListComponent {
       if (confirmation) {
         this.authService.deleteProject(this.project.id).subscribe(
           () => {
+            window.location.reload();
             console.log('Project deleted successfully', this.project.id);
             this.delete.emit(this.project.id);
-            window.location.reload();
           },
           (error) => {
             if (error.status === 500) {
