@@ -30,14 +30,12 @@ export class ProjectListComponent {
       if (confirmation) {
         this.authService.deleteProject(this.project.id).subscribe(
           () => {
-            console.log('Project deleted successfully');
+            console.log('Project deleted successfully', this.project.id);
             this.delete.emit(this.project.id); // Emit project ID on successful deletion
           },
           (error) => {
             if (error.status === 500) {
-              window.alert(
-                'You are not the owner of this project or an internal server error occurred.',
-              );
+              window.alert('You are not the owner of this project ');
             }
             console.error('Error deleting project:', error);
           },

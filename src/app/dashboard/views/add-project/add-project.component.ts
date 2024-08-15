@@ -1,39 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
-  FormArray,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
+  FormArray,
   Validators,
+  FormControl,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../../core/services/auth/auth.service';
 import { format } from 'date-fns';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [ReactiveFormsModule, NgForOf, NgIf],
+  imports: [AutoCompleteModule, NgForOf, ReactiveFormsModule, NgIf],
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent implements OnInit {
   addProjectForm: FormGroup;
-  projectId?: number;
-  maxMembers = 5;
-
-  statusMapping: { [key: number]: string } = {
-    1: 'START',
-    2: 'PRE',
-    3: 'END',
-  };
-
-  reverseStatusMapping: { [key: string]: number } = {
-    START: 1,
-    PRE: 2,
-    END: 3,
-  };
+  @Input() projectId?: number;
+  selectedItems: any[] = [];
+  items: any[] = []; // Array for autocomplete suggestions
+  maxMembers = 5; // Maximum number of members
 
   constructor(
     private fb: FormBuilder,
@@ -44,10 +39,10 @@ export class AddProjectComponent implements OnInit {
     this.addProjectForm = this.fb.group({
       name: ['', [Validators.required]],
       intro: ['', [Validators.required]],
-      status: [null, [Validators.required]],
+      status: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
-      projectMemberUsernames: this.fb.array([]),
+      projectMemberUsernames: this.fb.array([]), // Initialize as FormArray
     });
   }
 
@@ -56,7 +51,7 @@ export class AddProjectComponent implements OnInit {
       const id = params.get('id');
       if (id) {
         this.projectId = +id;
-        this.loadProjectDetails(this.projectId);
+        this.loadProjectDetails(this.projectId); // Load project details if in edit mode
       }
     });
   }
@@ -67,36 +62,54 @@ export class AddProjectComponent implements OnInit {
 
   addMember() {
     if (this.projectMemberUsernames.length < this.maxMembers) {
-      this.projectMemberUsernames.push(this.fb.control(''));
+      this.projectMemberUsernames.push(new FormControl('')); // Add empty FormControl
     }
   }
 
   removeMember(index: number) {
-    this.projectMemberUsernames.removeAt(index);
+    this.projectMemberUsernames.removeAt(index); // Remove FormControl at index
+  }
+
+  loadProjectDetails(id: number) {
+    this.authService.getProject(id).subscribe((project) => {
+      this.addProjectForm.patchValue({
+        name: project.name,
+        intro: project.intro,
+        status: project.status,
+        startDate: project.startDate,
+        endDate: project.endDate,
+      });
+
+      const projectMembersArray = this.projectMemberUsernames;
+      projectMembersArray.clear(); // Clear existing controls
+
+      project.projectMemberUsernames.forEach((username: string) => {
+        projectMembersArray.push(new FormControl(username)); // Add FormControl for each username
+      });
+    });
+  }
+
+  search(event: AutoCompleteCompleteEvent) {
+    this.authService.getUsernames().subscribe((usernames) => {
+      this.items = usernames.map((username) => ({ name: username }));
+    });
   }
 
   onSubmit() {
     if (this.addProjectForm.valid) {
       const formData = this.addProjectForm.value;
 
-      const filteredMemberUsernames = formData.projectMemberUsernames.filter(
-        (username: string) => username.trim() !== '',
-      );
-
-      // Map the status string to its corresponding numeric value
-      const statusValue = this.reverseStatusMapping[formData.status];
-
       const data = {
         name: formData.name,
         intro: formData.intro,
-        status: statusValue, // Use the numeric status value
+        status: String(formData.status), // Convert status to string to match API format
         startDate: formData.startDate
           ? format(new Date(formData.startDate), 'yyyy-MM-dd')
           : null,
         endDate: formData.endDate
           ? format(new Date(formData.endDate), 'yyyy-MM-dd')
           : null,
-        projectMemberUsernames: filteredMemberUsernames,
+        projectMemberUsernames: formData.projectMemberUsernames, // Use form data directly
       };
 
       if (this.projectId !== undefined) {
@@ -121,27 +134,5 @@ export class AddProjectComponent implements OnInit {
         );
       }
     }
-  }
-
-  private loadProjectDetails(id: number) {
-    this.authService.getProject(id).subscribe((project) => {
-      this.addProjectForm.patchValue({
-        name: project.name,
-        intro: project.intro,
-        status: this.getStatusString(project.status), // Convert the enum number to string for the form
-        startDate: project.startDate,
-        endDate: project.endDate,
-      });
-
-      this.projectMemberUsernames.clear();
-      project.projectMemberUsernames.forEach((username: string) => {
-        this.projectMemberUsernames.push(this.fb.control(username));
-      });
-    });
-  }
-
-  // Convert enum number to its corresponding string value for the form
-  private getStatusString(status: number): string {
-    return this.statusMapping[status] || 'START';
   }
 }
