@@ -61,25 +61,10 @@ export class AuthService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-
-    return this.http
-      .delete(this.deleteProjectApi + `/${id}`, {
-        headers,
-        observe: 'response',
-      })
-      .pipe(
-        map((response) => {
-          // Handle JSON response if needed
-          if (response.body) {
-            return response.body;
-          }
-          return {}; // Return empty object if no body
-        }),
-        catchError((error) => {
-          console.error('Error deleting project:', error);
-          return throwError('An error occurred; please try again later.');
-        }),
-      );
+    return this.http.delete(this.deleteProjectApi + `/${id}`, {
+      headers,
+      responseType: 'text' as 'json',
+    });
   }
 
   getProject(id: number): Observable<any> {
