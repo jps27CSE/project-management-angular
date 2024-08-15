@@ -30,7 +30,8 @@ export class ProjectListComponent {
         this.authService.deleteProject(this.project.id).subscribe(
           () => {
             console.log('Project deleted successfully', this.project.id);
-            this.delete.emit(this.project.id); // Emit project ID on successful deletion
+            this.delete.emit(this.project.id);
+            window.location.reload();
           },
           (error) => {
             if (error.status === 500) {
