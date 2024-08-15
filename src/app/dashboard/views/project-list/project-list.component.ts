@@ -35,7 +35,7 @@ export class ProjectListComponent {
           (error) => {
             if (error.stutus === 200) {
               window.confirm('Deleted project successfully');
-            } else {
+            } else if (error.status === 500) {
               window.confirm('You are not owner of this project');
             }
             console.error('Error deleting project:', error);
